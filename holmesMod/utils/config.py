@@ -24,7 +24,7 @@ def setup_logging(verbose=False):
             logging.StreamHandler(sys.stdout)
         ]
     )
-    return logging.getLogger('ip_checker')
+    return logging.getLogger('holmesMod')
 
 def get_db_path(db_name):
     local_path = None
