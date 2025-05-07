@@ -22,9 +22,25 @@ chmod +x install.sh
 ./install.sh
 ```
 
+> [!WARNING]
+> For security reasons, we recommend using your own Account ID and License Key. For guidance on how to obtain these, please refer to our [WIKI](https://github.com/jon-brandy/HolmesGeo/wiki/How-to-Obtain-GeoLite2-License-from-MaxMind).
+
+```sh
+# install.sh
+...
+...
+23 UserId <<PASTE_ACCOUNT_ID_HERE>>
+24 LicenseKey <<PASTE_LICENSE_KEY_HERE>>
+25 EditionIDs GeoLite2-Country GeoLite2-City GeoLite2-ASN
+26 DatabaseDirectory /usr/local/share/GeoIP
+27 EOF'
+...
+...
+```
+
 ## [✅] Basic Usage
 
-> [!IMPORTANT]
+> [!NOTE]
 > HolmesGeo can be run in several ways, note that the current directory for this example is at /HolmesGeo/
 
 > ### Command Line Interface
