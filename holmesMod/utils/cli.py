@@ -18,9 +18,9 @@ def display_banner():
     ascii_art = ascii_art.replace('ASIA', colored('ASIA', 'red', attrs=['bold']))
     print(colored(ascii_art, 'cyan', attrs=['bold']))
 
-    description = "[#] ITSEC Asia - Baby IP Checker [#]"
-    description = description.replace('ITSEC', colored('ITSEC', 'red', attrs=['bold']))
-    description = description.replace('Baby IP Checker', colored('Baby IP Checker', 'green', attrs=['bold']))
+    description = "[#] HolmesGeo - A Simple Tool for IP Geolocation Check [#]"
+    description = description.replace('HolmesGeo', colored('HolmesGeo', 'red', attrs=['bold']))
+    description = description.replace('A Simple Tool for IP Geolocation Check', colored('A Simple Tool for Geolocation Check', 'green', attrs=['bold']))
     print(description)
 
 
