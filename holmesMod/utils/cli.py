@@ -20,7 +20,7 @@ def display_banner():
 
     description = "[#] HolmesGeo - A Simple Tool for IP Geolocation Check [#]"
     description = description.replace('HolmesGeo', colored('HolmesGeo', 'red', attrs=['bold']))
-    description = description.replace('A Simple Tool for IP Geolocation Check', colored('A Simple Tool for IP Geolocation Check', 'green', attrs=['bold']))
+    description = description.replace('A Simple Tool for IP Geolocation Check', colored('A Simple Tool for Geolocation Check', 'green', attrs=['bold']))
     print(description)
 
 
@@ -34,13 +34,15 @@ Please provide a file with IP addresses to check:
   - Use --check to perform IP check from a text file with one IP per line.
 
 Usage Example:
-- python3 script.py apache apache.log
-- python3 script.py --csv file.csv
-- python3 script.py --csv file.csv --column source_ip
-- cat ip.txt | python3 script.py
-- echo "0.0.0.0" | python3 script.py
-- echo -en "0.0.0.0\n8.8.8.8" | python3 script.py
-- python3 script.py check list_ip.txt
+python3 -m ip_checker.main --apache apache.log
+python3 -m ip_checker.main --csv file.csv
+python -m ip_checker.main --csv file.csv --column source_ip
+python -m ip_checker.main --check list_ip.txt
+
+./chk.sh --check samples/iplist.txt
+./chk.sh --csv samples/sample.csv --column ip_address
+./chk.sh --apache samples/sample_log.txt
+cat samples/iplist.txt | ./chk.sh
 """
     print(colored(guides, 'cyan'))
 
