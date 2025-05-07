@@ -20,7 +20,7 @@ def display_banner():
 
     description = "[#] HolmesGeo - A Simple Tool for IP Geolocation Check [#]"
     description = description.replace('HolmesGeo', colored('HolmesGeo', 'red', attrs=['bold']))
-    description = description.replace('A Simple Tool for IP Geolocation Check', colored('A Simple Tool for Geolocation Check', 'green', attrs=['bold']))
+    description = description.replace('A Simple Tool for IP Geolocation Check', colored('A Simple Tool for IP Geolocation Check', 'green', attrs=['bold']))
     print(description)
 
 
