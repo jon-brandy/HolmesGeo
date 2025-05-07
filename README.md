@@ -1,4 +1,4 @@
-# HolmesGeo: A simple, modular tool for extracting and analyzing IP addresses from multiple sources.
+# HolmesGeo: A simple tool for extracting and analyzing IP addresses.
 
 <p align="center">
    <img src="https://github.com/user-attachments/assets/7ee12b0b-f61d-47c2-8f23-d38e5ceace1f" width="350">
