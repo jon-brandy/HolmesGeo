@@ -24,7 +24,8 @@ chmod +x install.sh
 
 ## [✅] Basic Usage
 
-HolmesGeo can be run in several ways:
+> [!IMPORTANT]
+> HolmesGeo can be run in several ways, note that the current directory for this example is at /HolmesGeo/
 
 > ### Command Line Interface
 
@@ -33,7 +34,8 @@ HolmesGeo can be run in several ways:
 ./chk.sh [OPTIONS]
 
 # Or directly with Python
-python -m ip_checker.main [OPTIONS]
+source venv/bin/python
+python -m holmesMod.main [OPTIONS]
 ```
 
 ## [🧠] Command Line Options
@@ -51,7 +53,7 @@ python -m ip_checker.main [OPTIONS]
 
 ```bash
 ./chk.sh --apache samples/sample_log.txt
-python3 -m ip_checker.main --apache apache.log
+python3 -m holmesMod.main --apache apache.log
 ```
 
 This extracts all IP addresses from the Apache log file and checks their geolocation and network information.
@@ -61,18 +63,18 @@ This extracts all IP addresses from the Apache log file and checks their geoloca
 ```bash
 # Extract from all columns
 ./chk.sh --csv samples/sample.csv
-python3 -m ip_checker.main --csv file.csv
+python3 -m holmesMod.main --csv file.csv
 
 # Extract from a specific column
 ./chk.sh --csv samples/sample.csv --column ip_address
-python -m ip_checker.main --csv file.csv --column source_ip
+python -m holmesMod.main --csv file.csv --column source_ip
 ```
 
 > ### Check IPs from a Text File
 
 ```bash
 ./chk.sh --check samples/iplist.txt.txt
-python -m ip_checker.main --check list_ip.txt
+python -m holmesMod.main --check list_ip.txt
 ```
 
 > ### Pipe IPs Directly to the Tool
@@ -81,7 +83,7 @@ python -m ip_checker.main --check list_ip.txt
 echo "8.8.8.8" | ./chk.sh
 echo -e "8.8.8.8\n37.252.185.229" | ./chk.sh
 cat samples/iplist.txt| ./chk.sh
-cat ip.txt | python -m ip_checker.main
+cat ip.txt | python -m holmesMod.main
 ```
 
 ## [❓] Output
@@ -105,7 +107,7 @@ The tool generates two output files in the `results` directory:
 ## [📝] Working with the Results
 
 > [!NOTE]
-> **The results are saved in the `ip_checker/results` directory. Each run creates new files with names based on the input source.**
+> **The results are saved in the `holmesMod/results` directory. Each run creates new files with names based on the input source.**
 
 For stdin input:
 ```
@@ -134,7 +136,7 @@ filename_ipinfo_v1.xlsx
 1. The GeoIP databases are correctly installed:
    
 ```bash
-ls -la ip_checker/db/
+ls -la holmesMod/db/
 ```
 
 2. Run the installation script to update databases:
@@ -151,8 +153,9 @@ ls -la ip_checker/db/
 
 ```bash
 # Fix permissions for database files
-sudo chown -R $USER:$USER ip_checker/db/
-chmod 644 ip_checker/db/*.mmdb
+sudo chown -R $USER:$USER holmesMod/db/
+chmod 644 holmesMod/db/*.mmdb
 
 # Fix permissions for results directory
-chmod -R 755 ip_checker/results/
+chmod -R 755 holmesMod/results/
+```
