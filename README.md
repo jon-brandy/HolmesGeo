@@ -137,7 +137,7 @@ If you receive database-related errors, make sure:
    ./install.sh
    ```
 
-[!TIP] **Permission Issues**  
+> [!TIP] **Permission Issues**  
 If you encounter permission issues, run the following commands to fix the permissions for the database files and results directory:
 
 ```bash
