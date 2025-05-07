@@ -1,7 +1,7 @@
 from setuptools import setup, find_packages
 
 setup(
-    name="ip_checker",
+    name="holmesMod",
     version="1.5",
     packages=find_packages(),
     install_requires=[
@@ -13,9 +13,12 @@ setup(
     ],
     entry_points={
         'console_scripts': [
-            'ip-checker=ip_checker.main:main',
+            'ip-checker=holmesMod.main:main',
         ],
     },
     author="Nicolas Saputra Gunawan",
+    author_email="nicolasgunawan@itsec.asia",
+    description="A simple tool for extracting and analyzing IP addresses",
+    keywords="ip, geoip-location, geoip-lookup, ipchecker",
     python_requires=">=3.8",
 )
