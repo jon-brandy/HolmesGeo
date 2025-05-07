@@ -126,7 +126,7 @@ filename_ipinfo_v1.csv
 filename_ipinfo_v1.xlsx
 ```
 
-## [⚙️] Troubleshooting
+## [⛓️] Troubleshooting
 
 > [!TIP]
 > ### Database Issues  
