@@ -89,16 +89,16 @@ cat ip.txt | python -m ip_checker.main
 The tool generates two output files in the `results` directory:
 
 1. A CSV file containing the following information for each IP:
-   - IP Address
-   - City
-   - City Latitude
-   - City Longitude
-   - Country
-   - Country Code
-   - Continent
-   - ASN Number
-   - ASN Organization
-   - Network
+- IP Address
+- City
+- City Latitude
+- City Longitude
+- Country
+- Country Code
+- Continent
+- ASN Number
+- ASN Organization
+- Network
 
 2. An Excel (XLSX) file with the same information, formatted for better readability.
 
