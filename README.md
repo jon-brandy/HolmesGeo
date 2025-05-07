@@ -133,14 +133,16 @@ filename_ipinfo_v1.xlsx
 > If you receive database-related errors, kindly make sure these things.
 
 1. The GeoIP databases are correctly installed:
-   ```bash
-   ls -la ip_checker/db/
-   ```
+   
+```bash
+ls -la ip_checker/db/
+```
 
 2. Run the installation script to update databases:
-   ```bash
-   ./install.sh
-   ```
+   
+```bash
+./install.sh
+```
 
 
 > [!TIP]
