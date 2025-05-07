@@ -51,7 +51,7 @@ chmod +x install.sh
 
 # Or directly with Python
 source venv/bin/python
-python -m holmesMod.main [OPTIONS]
+python3 -m holmesMod.main [OPTIONS]
 ```
 
 ## [🧠] Command Line Options
@@ -83,14 +83,14 @@ python3 -m holmesMod.main --csv file.csv
 
 # Extract from a specific column
 ./chk.sh --csv samples/sample.csv --column ip_address
-python -m holmesMod.main --csv file.csv --column source_ip
+python3 -m holmesMod.main --csv file.csv --column source_ip
 ```
 
 > ### Check IPs from a Text File
 
 ```bash
 ./chk.sh --check samples/iplist.txt.txt
-python -m holmesMod.main --check list_ip.txt
+python3 -m holmesMod.main --check list_ip.txt
 ```
 
 > ### Pipe IPs Directly to the Tool
