@@ -17,8 +17,5 @@ setup(
         ],
     },
     author="Nicolas Saputra Gunawan",
-    author_email="nicolasgunawan@itsec.asia",
-    description="A simple tool for extracting and analyzing IP addresses",
-    keywords="ip, geoip-location, geoip-lookup, ipchecker",
     python_requires=">=3.8",
 )
