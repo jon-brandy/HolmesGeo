@@ -43,6 +43,8 @@ python -m ip_checker.main --check list_ip.txt
 ./chk.sh --csv samples/sample.csv --column ip_address
 ./chk.sh --apache samples/sample_log.txt
 cat samples/iplist.txt | ./chk.sh
+echo "8.8.8.8" | ./chk.sh
+echo -e "8.8.8.8\n37.252.185.229" | ./chk.sh
 """
     print(colored(guides, 'cyan'))
 
