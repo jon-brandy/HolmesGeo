@@ -6,11 +6,11 @@ CYAN='\033[1;36m'
 BOLD='\033[1m'
 NC='\033[0m'
 
-echo -e "[+] ${RED}ITSEC Asia${NC} ${GREEN}IP Checker Installer${NC} [+]"
+echo -e "[+] ${RED}Holmes Geo${NC} ${GREEN}Installer${NC} [+]"
 
 echo -e "\n${BOLD}Creating project directories...${NC}"
-mkdir -p ip_checker/db
-mkdir -p ip_checker/results
+mkdir -p holmesMod/db
+mkdir -p holmesMod/results
 
 echo -e "\n${BOLD}Installing system dependencies...${NC}"
 sudo apt update
@@ -57,19 +57,19 @@ sudo mkdir -p /usr/local/share/GeoIP
 sudo geoipupdate
 
 echo -e "\n${BOLD}Copying GeoIP databases to project directory...${NC}"
-sudo cp /usr/local/share/GeoIP/GeoLite2-City.mmdb ip_checker/db/
-sudo cp /usr/local/share/GeoIP/GeoLite2-ASN.mmdb ip_checker/db/
-sudo cp /usr/local/share/GeoIP/GeoLite2-Country.mmdb ip_checker/db/
+sudo cp /usr/local/share/GeoIP/GeoLite2-City.mmdb holmesMod/db/
+sudo cp /usr/local/share/GeoIP/GeoLite2-ASN.mmdb holmesMod/db/
+sudo cp /usr/local/share/GeoIP/GeoLite2-Country.mmdb holmesMod/db/
 
 echo -e "\n${BOLD}Setting permissions...${NC}"
-sudo chown -R $USER:$USER ip_checker/db/
-chmod 644 ip_checker/db/*.mmdb
+sudo chown -R $USER:$USER holmesMod/db/
+chmod 644 holmesMod/db/*.mmdb
 
 echo -e "\n${BOLD}Forging run script... :D${NC}"
 cat > chk.sh <<EOF
 #!/bin/bash
 source venv/bin/activate
-python -m ip_checker.main \$@
+python -m holmesMod.main \$@
 EOF
 chmod +x chk.sh
 
