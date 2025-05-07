@@ -137,9 +137,8 @@ If you receive database-related errors, make sure:
    ./install.sh
    ```
 
-### Permission Issues
-
-If you encounter permission issues:
+[!TIP] **Permission Issues**  
+If you encounter permission issues, run the following commands to fix the permissions for the database files and results directory:
 
 ```bash
 # Fix permissions for database files
@@ -148,16 +147,3 @@ chmod 644 ip_checker/db/*.mmdb
 
 # Fix permissions for results directory
 chmod -R 755 ip_checker/results/
-```
-
-### Python Environment Issues
-
-If you encounter Python-related errors:
-
-```bash
-# Activate the virtual environment
-source venv/bin/activate
-
-# Update dependencies
-pip install -e .
-```
