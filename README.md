@@ -138,7 +138,7 @@ If you receive database-related errors, make sure:
    ```
 
 > [!TIP] **Permission Issues**  
-If you encounter permission issues, run the following commands to fix the permissions for the database files and results directory:
+> If you encounter permission issues, run the following commands to fix the permissions for the database files and results directory:
 
 ```bash
 # Fix permissions for database files
