@@ -1,7 +1,7 @@
 # HolmesGeo: A simple tool for extracting and analyzing IP addresses.
 
 <p align="center">
-   <img src="https://github.com/user-attachments/assets/7ee12b0b-f61d-47c2-8f23-d38e5ceace1f" width="350">
+   <img src="https://github.com/user-attachments/assets/078a61db-b3ac-4dcc-a1e3-2f25a14ba274" width="350">
 </p>
 
 
