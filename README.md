@@ -15,27 +15,27 @@
 
 ## [⚙️] Installation
 
-```bash
-git clone https://github.com/jon-brandy/simple_ipcheck.git
-cd simple_ipcheck
-chmod +x install.sh
-./install.sh
-```
-
 > [!WARNING]
 > For security reasons, we recommend using your own Account ID and License Key. For guidance on how to obtain these, please refer to our [WIKI](https://github.com/jon-brandy/HolmesGeo/wiki/How-to-Obtain-GeoLite2-License-from-MaxMind).
 
 ```txt
-# install.sh
-...
-...
+# Can be seen at install.sh
+21 ...
+22 ...
 23 UserId <<PASTE_ACCOUNT_ID_HERE>>
 24 LicenseKey <<PASTE_LICENSE_KEY_HERE>>
 25 EditionIDs GeoLite2-Country GeoLite2-City GeoLite2-ASN
 26 DatabaseDirectory /usr/local/share/GeoIP
 27 EOF'
-...
-...
+28 ...
+29 ...
+```
+
+```bash
+git clone https://github.com/jon-brandy/simple_ipcheck.git
+cd simple_ipcheck
+chmod +x install.sh
+./install.sh
 ```
 
 ## [✅] Basic Usage
