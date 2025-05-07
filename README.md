@@ -24,7 +24,7 @@ chmod +x install.sh
 
 ## [✅] Basic Usage
 
-The IP Checker can be run in several ways:
+HolmesGeo can be run in several ways:
 
 > ### Command Line Interface
 
