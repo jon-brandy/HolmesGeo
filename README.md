@@ -25,7 +25,7 @@ chmod +x install.sh
 > [!WARNING]
 > For security reasons, we recommend using your own Account ID and License Key. For guidance on how to obtain these, please refer to our [WIKI](https://github.com/jon-brandy/HolmesGeo/wiki/How-to-Obtain-GeoLite2-License-from-MaxMind).
 
-```sh
+```txt
 # install.sh
 ...
 ...
