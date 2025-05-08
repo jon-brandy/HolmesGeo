@@ -25,7 +25,7 @@ def main():
 
     args = parse_arguments()
     if not args.mode:
-        colored_print("[!] Error: Please specify an input method (--apache, --csv, or --check).", "red", "bold")
+        colored_print("[!] Error: Please specify an input method (--apache, --csv, |, or --check).", "red", "bold")
         display_guides()
         sys.exit(1)
     
