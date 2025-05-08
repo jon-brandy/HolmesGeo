@@ -2,6 +2,7 @@ import argparse
 from termcolor import colored
 
 def display_banner():
+    global description
     ascii_art = r'''
                   .----.
       .---------. | == |
@@ -20,8 +21,7 @@ def display_banner():
 
     description = "[#] HolmesGeo - A Simple Tool for IP Geolocation Check [#]"
     description = description.replace('HolmesGeo', colored('HolmesGeo', 'red', attrs=['bold']))
-    description = description.replace('A Simple Tool for IP Geolocation Check', colored('A Simple Tool for Geolocation Check', 'green', attrs=['bold']))
-    print(description)
+    description = description.replace('A Simple Tool for IP Geolocation Check', colored('A Simple Tool for IP Geolocation Check', 'green', attrs=['bold']))
 
 
 def display_guides():
@@ -34,10 +34,10 @@ Please provide a file with IP addresses to check:
   - Use --check to perform IP check from a text file with one IP per line.
 
 Usage Example:
-python3 -m ip_checker.main --apache apache.log
-python3 -m ip_checker.main --csv file.csv
-python -m ip_checker.main --csv file.csv --column source_ip
-python -m ip_checker.main --check list_ip.txt
+python3 -m holmesMod.main --apache apache.log
+python3 -m holmesMod.main --csv file.csv
+python -m holmesMod.main --csv file.csv --column source_ip
+python -m holmesMod.main --check list_ip.txt
 
 ./chk.sh --check samples/iplist.txt
 ./chk.sh --csv samples/sample.csv --column ip_address
@@ -50,7 +50,6 @@ echo -e "8.8.8.8\n37.252.185.229" | ./chk.sh
 
 
 def parse_arguments():
-    description = "[#] ITSEC Asia - Baby IP Checker [#]"
     
     parser = argparse.ArgumentParser(description=description)
     input_group = parser.add_mutually_exclusive_group()
@@ -64,8 +63,8 @@ def parse_arguments():
     parser.add_argument("--column", default=None, 
                         help="Column name containing IP addresses in CSV mode")
     
+    display_guides()
     args = parser.parse_args()
-    
     if args.apache:
         args.mode = "apache"
         args.file = args.apache
@@ -78,5 +77,5 @@ def parse_arguments():
     else:
         args.mode = None
         args.file = None
-        
+    
     return args
