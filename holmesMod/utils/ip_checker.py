@@ -1,5 +1,6 @@
 import os
 import csv
+import socket
 import ipaddress
 import geoip2.database
 import pandas as pd
@@ -26,21 +27,25 @@ def ipcheck_mod(ip_list, output_file_path):
         writer = csv.writer(file)
         header = [
             'IP Address', 'City', 'City Latitude', 'City Longitude', 'Country', 'Country Code', 
-            'Continent', 'ASN Number', 'ASN Organization', 'Network'
+            'Continent', 'ASN Number', 'ASN Organization', 'Network', 'Reverse DNS'
         ]
         writer.writerow(header)
-        
-        # Print header row to stdout exactly as in CSV
+    
         print(",".join(header))
 
-        for ip in ip_list:
-            ip = ip.strip()
-
+        for entry in ip_list:
+            entry = entry.strip()
             try:
-                ipaddress.ip_address(ip) 
+                ipaddress.ip_address(entry)
+                ip = entry 
             except ValueError:
-                colored_print(f'[!] Invalid IP: {ip}. Skipping this IP.', 'red', 'bold')
-                continue  
+                colored_print(f'[*] Processing domain: {entry}', 'cyan')
+                try:
+                    ip = socket.gethostbyname(entry)
+                    colored_print(f'[+] Resolved domain {entry} to IP: {ip}', 'green')
+                except socket.gaierror:
+                    colored_print(f'[!] Cannot resolve domain: {entry}. Skipping.', 'red', 'bold')
+                    continue
 
             ip_info = get_ip_info(ip)
             
@@ -54,6 +59,12 @@ def ipcheck_mod(ip_list, output_file_path):
     # Convert CSV to XLSX
     create_excel_report(outfp)
 
+def rdns(ip):
+    try:
+        hostname, _, _ = socket.gethostbyaddr(ip)
+        return hostname
+    except (socket.herror, socket.gaierror):
+        return "N/A"
 
 def get_ip_info(ip):
     city_info = None
@@ -63,6 +74,9 @@ def get_ip_info(ip):
     citymmdb = get_db_path('city')
     asnmmdb = get_db_path('asn')
     countmmdb = get_db_path('country')
+    rev_dns = rdns(ip)
+    if rev_dns == "N/A":
+        colored_print(f'[!] No reverse DNS found for IP: {ip}', 'yellow')  
 
     try:
         with geoip2.database.Reader(citymmdb) as reader:
@@ -102,11 +116,11 @@ def get_ip_info(ip):
             city_info.continent.names.get('en', 'N/A'),
             asn_info.autonomous_system_number if asn_info else 'N/A',
             asn_info.autonomous_system_organization if asn_info else 'N/A',
-            asn_info.network if asn_info else 'N/A'
+            asn_info.network if asn_info else 'N/A',
+            rev_dns
         ]
     
     return None
-
 
 def create_excel_report(csv_file):
     df = pd.read_csv(csv_file)
@@ -132,7 +146,6 @@ def create_excel_report(csv_file):
     wb.save(excel_file)
     colored_print("[STAGE-2]", 'magenta', 'bold')
     print(f'Result saved to: {excel_file}')
-
 
 def colored_print(message, color, style=None):
     print(colored(message, color, attrs=[style] if style else []))
