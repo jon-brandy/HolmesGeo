@@ -117,6 +117,7 @@ The tool generates two output files in the `results` directory:
 - ASN Number
 - ASN Organization
 - Network
+- Reverse DNS
 
 2. An Excel (XLSX) file with the same information, formatted for better readability.
 
