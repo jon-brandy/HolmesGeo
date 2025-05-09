@@ -67,7 +67,7 @@ chmod 644 holmesMod/db/*.mmdb
 
 echo -e "\n${BOLD}Configuring VirusTotal API Key...${NC}"
 if [ -f "venv/bin/activate" ]; then
-    VT_API_KEY="<<PASTE_VT_KEY_HERE"
+    VT_API_KEY="<<PASTE_VT_API_KEY_HERE>>"
     grep -q "export VT_API_KEY" venv/bin/activate || echo "export VT_API_KEY='$VT_API_KEY'" >> venv/bin/activate
     echo "VirusTotal API Key configured successfully!"
     source venv/bin/activate
