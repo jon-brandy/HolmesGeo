@@ -4,7 +4,7 @@ from termcolor import colored
 
 from holmesMod.utils.cli import parse_arguments, display_banner
 from holmesMod.utils.ip_ext import apache_ipext, csv_ipext, read_stdin_ips
-from holmesMod.utils.ip_checker import ipcheck_mod
+from holmesMod.utils.ip_checker import ipcheck_mod, get_ssl_registrar
 from holmesMod.utils.file_utils import get_output_path
 from holmesMod.utils.config import ensure_dirs_exist, setup_logging
 
