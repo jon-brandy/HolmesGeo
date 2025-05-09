@@ -19,7 +19,7 @@
 > For security reasons, we recommend using your own Account ID and License Key for MaxMind DB and your own API Key for Virus Total. For guidance on how to obtain these, please refer to our [WIKI](https://github.com/jon-brandy/HolmesGeo/wiki/Obtain-GeoLite2-License-and-Virus-Total-API-Key).
 
 ```txt
-# Can be seen at install.sh
+# Paste your MaxMind UserID and LicenseKey at install.sh script
 21 ...
 22 ...
 23 UserId <<PASTE_ACCOUNT_ID_HERE>>
@@ -29,6 +29,23 @@
 27 EOF'
 28 ...
 29 ...
+```
+
+```txt
+# Paste your Virus Total API Key at install.sh script
+66 ...
+67 ...
+68 echo -e "\n${BOLD}Configuring VirusTotal API Key...${NC}"
+69 if [ -f "venv/bin/activate" ]; then
+70     VT_API_KEY="c0f95cefa7058882bab81320da49acd654e927a3a904cbfc7f1b614f0abba001"
+71     grep -q "export VT_API_KEY" venv/bin/activate || echo "export VT_API_KEY='$VT_API_KEY'" >> venv/bin/activate
+72     echo "VirusTotal API Key configured successfully!"
+73     source venv/bin/activate
+74 else
+75     echo "[!] Skipping VirusTotal API Key configuration, no key found."
+76 fi
+77 ...
+78 ...
 ```
 
 ```bash
