@@ -1,4 +1,6 @@
 import re
+import socket
+import ipaddress
 import sys
 import pandas as pd
 from termcolor import colored
@@ -63,9 +65,28 @@ def csv_ipext(csv_file_path, column_name=None):
 def read_stdin_ips():
     ip_pattern = re.compile(r'\b(?:\d{1,3}\.){3}\d{1,3}\b')
     ips = []
-    for line in sys.stdin:
+    
+    input_data = sys.stdin.read().strip()
+    if not input_data:
+        return []
+    
+    for line in input_data.split('\n'):
+        line = line.strip()
+        if not line:
+            continue
+            
         matches = ip_pattern.findall(line)
-        ips.extend(matches)
+        if matches:
+            for ip in matches:
+                octets = ip.split('.')
+                if all(0 <= int(octet) <= 255 for octet in octets):
+                    ips.append(ip)
+        else:
+            try:
+                ip = socket.gethostbyname(line)
+                ips.append(ip)
+            except socket.gaierror:
+                pass
     return ips
 
 
