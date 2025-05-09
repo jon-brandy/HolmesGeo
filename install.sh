@@ -20,9 +20,9 @@ echo -e "\n${BOLD}Configuring GeoIP...${NC}"
 if [ ! -f "/etc/GeoIP.conf" ]; then
     echo "GeoIP configuration file not found. Creating a new one..."
     sudo bash -c 'cat > /etc/GeoIP.conf <<EOF
-UserId <<PASTE_ACCOUNT_ID_HERE>>
-LicenseKey <<PASTE_LICENSE_KEY_HERE>>
-EditionIDs GeoLite2-Country GeoLite2-City GeoLite2-ASN
+UserId 1158479
+LicenseKey <<PASTE_ACCOUNT_ID_HERE>>
+EditionIDs <<PASTE_LICENSE_KEY_HERE>>
 DatabaseDirectory /usr/local/share/GeoIP
 EOF'
     echo "GeoIP configuration file created successfully!"
@@ -64,6 +64,16 @@ sudo cp /usr/local/share/GeoIP/GeoLite2-Country.mmdb holmesMod/db/
 echo -e "\n${BOLD}Setting permissions...${NC}"
 sudo chown -R $USER:$USER holmesMod/db/
 chmod 644 holmesMod/db/*.mmdb
+
+echo -e "\n${BOLD}Configuring VirusTotal API Key...${NC}"
+if [ -f "venv/bin/activate" ]; then
+    VT_API_KEY="<<PASTE_VT_KEY_HERE"
+    grep -q "export VT_API_KEY" venv/bin/activate || echo "export VT_API_KEY='$VT_API_KEY'" >> venv/bin/activate
+    echo "VirusTotal API Key configured successfully!"
+    source venv/bin/activate
+else
+    echo "[!] Skipping VirusTotal API Key configuration, no key found."
+fi
 
 echo -e "\n${BOLD}Forging run script... :D${NC}"
 cat > chk.sh <<EOF
