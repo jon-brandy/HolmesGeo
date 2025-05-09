@@ -18,7 +18,7 @@
 > [!IMPORTANT]
 > For security reasons, we recommend using your own Account ID and License Key for MaxMind DB and your own API Key for Virus Total. For guidance on how to obtain these, please refer to our [WIKI](https://github.com/jon-brandy/HolmesGeo/wiki/Obtain-GeoLite2-License-and-Virus-Total-API-Key).
 
-```txt
+```html
 # Paste your MaxMind UserID and LicenseKey at install.sh script
 21 ...
 22 ...
@@ -31,7 +31,7 @@
 29 ...
 ```
 
-```txt
+```html
 # Paste your Virus Total API Key at install.sh script
 66 ...
 67 ...
