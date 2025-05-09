@@ -1,4 +1,5 @@
 import os
+import requests
 import csv
 import socket
 import ipaddress
@@ -27,7 +28,7 @@ def ipcheck_mod(ip_list, output_file_path):
         writer = csv.writer(file)
         header = [
             'IP Address', 'City', 'City Latitude', 'City Longitude', 'Country', 'Country Code', 
-            'Continent', 'ASN Number', 'ASN Organization', 'Network', 'Reverse DNS'
+            'Continent', 'ASN Number', 'ASN Organization', 'Network', 'Reverse DNS', 'Certificate CN', 'Domain Registrar URL'
         ]
         writer.writerow(header)
     
@@ -35,14 +36,17 @@ def ipcheck_mod(ip_list, output_file_path):
 
         for entry in ip_list:
             entry = entry.strip()
+            domain = None
             try:
                 ipaddress.ip_address(entry)
                 ip = entry 
+                rev_dns = rdns(ip)
+                if rev_dns != "N/A":
+                    domain = rev_dns
             except ValueError:
-                # colored_print(f'[*] Processing domain: {entry}', 'cyan')
+                domain = entry
                 try:
                     ip = socket.gethostbyname(entry)
-                    # colored_print(f'[+] Resolved domain {entry} to IP: {ip}', 'green')
                 except socket.gaierror:
                     colored_print(f'[!] Cannot resolve domain: {entry}. Skipping.', 'red', 'bold')
                     continue
@@ -50,6 +54,8 @@ def ipcheck_mod(ip_list, output_file_path):
             ip_info = get_ip_info(ip)
             
             if ip_info:
+                cert_cn, registrar = get_ssl_registrar(domain if domain else ip)
+                ip_info.extend([cert_cn, registrar])
                 writer.writerow(ip_info)
                 print(",".join(str(item) for item in ip_info))
 
@@ -66,6 +72,104 @@ def rdns(ip):
     except (socket.herror, socket.gaierror):
         return "N/A"
 
+def get_ssl_registrar(ip):
+    certificate = "N/A"
+    registrar = "N/A"
+    try:
+        if ip == "N/A":
+            return certificate, registrar
+        api_key = os.environ.get('VT_API_KEY')
+        if not api_key:
+            colored_print("[!] VT_API_KEY environment variable not set", "red", "bold")
+            return certificate, registrar
+        try:
+            ipaddress.ip_address(ip)
+            ini_ip = True
+        except ValueError:
+            ini_ip = False
+        
+        headers = {
+            'x-apikey': api_key
+        }
+        
+        if ini_ip:
+            url = f"https://www.virustotal.com/api/v3/ip_addresses/{ip}"
+        else:
+            url = f"https://www.virustotal.com/api/v3/domains/{ip}"
+        
+        response = requests.get(url, headers=headers)
+        
+        if response.status_code == 200:
+            data = response.json()
+            if 'data' in data and 'attributes' in data['data']:
+                attributes = data['data']['attributes']
+                if 'last_https_certificate' in attributes:
+                    cert_data = attributes['last_https_certificate']
+                    
+                    if 'subject' in cert_data and 'CN' in cert_data['subject']:
+                        certificate = cert_data['subject']['CN']
+                        # print('FOUND CN')
+                    # Issuer as fallback
+                    elif 'issuer' in cert_data and 'CN' in cert_data['issuer']:
+                        certificate = f"(issuer) {cert_data['issuer']['CN']}"
+                        # print('FOUND CERT')
+                
+                if ini_ip:
+                    if 'as_owner' in attributes:
+                        owner = attributes.get('as_owner', 'Unknown')
+                        asn = attributes.get('asn', 'Unknown')
+                        registrar = f"AS{asn} ({owner})"
+                    elif 'network' in attributes:
+                        network = attributes.get('network', 'Unknown')
+                        registrar = f"Network: {network}"
+                        
+                    # Try to extract related domains from IP response
+                    if certificate == "N/A" and 'last_https_certificate' in attributes:
+                        cert_data = attributes['last_https_certificate']
+                        if 'subject_alternative_name' in cert_data:
+                            alt_names = cert_data['subject_alternative_name']
+                            if 'DNS' in alt_names and alt_names['DNS']:
+                                certificate = alt_names['DNS'][0] 
+                                colored_print(f"[+] Using alternative domain from certificate: {certificate}", "green")
+                else:
+                    if 'whois' in attributes:
+                        whois_data = attributes['whois']
+                        whois_lines = whois_data.split('\n')
+                        for line in whois_lines:
+                            line_lower = line.lower()
+                            if 'domain registrar url:' in line_lower or 'registrar url:' in line_lower:
+                                parts = line.split(':', 1)
+                                if len(parts) > 1:
+                                    registrar = parts[1].strip()
+                                    # print('FOUND REGISTRAR')
+                                    break
+                        
+                        # Try looking for the text directly
+                        if registrar == "N/A":
+                            import re
+                            urls = re.findall(r'https?://(?:www\.)?[a-zA-Z0-9-]+\.[a-zA-Z0-9-.]+/?[^\s]*', whois_data)
+                            for url_found in urls:
+                                if any(registrar_keyword in url_found.lower() for registrar_keyword in 
+                                      ['registrar', 'whois', 'domain', 'iana', 'icann']):
+                                    registrar = url_found
+                                    colored_print(f"[+] Found likely registrar URL: {registrar}", "green")
+                                    break
+        else:
+            colored_print(f"[!] Error getting data from VirusTotal: {response.status_code}", "yellow")
+            if response.status_code == 401:
+                colored_print("[!] Authentication failed. Check your API key.", "red", "bold")
+            elif response.status_code == 403:
+                colored_print("[!] Access denied. Check your API key permissions.", "red", "bold")
+            elif response.status_code == 404:
+                colored_print(f"[!] No data found for {ip}", "yellow")
+            elif response.status_code == 429:
+                colored_print("[!] API request quota exceeded.", "red", "bold")
+            
+    except Exception as e:
+        colored_print(f"[!] Error in get_ssl_registrar: {str(e)}", "red")
+        
+    return certificate, registrar
+
 def get_ip_info(ip):
     city_info = None
     country_info = None
@@ -75,6 +179,7 @@ def get_ip_info(ip):
     asnmmdb = get_db_path('asn')
     countmmdb = get_db_path('country')
     rev_dns = rdns(ip)
+    sslreg = get_ssl_registrar(ip)
     if rev_dns == "N/A":
         colored_print(f'[!] No reverse DNS found for IP: {ip}', 'yellow')  
 
