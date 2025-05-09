@@ -16,8 +16,7 @@
 ## [⚙️] Installation
 
 > [!IMPORTANT]
-> For security reasons, we recommend using your own Account ID and License Key for MaxMind DB. For guidance on how to obtain these, please refer to our [WIKI](https://github.com/jon-brandy/HolmesGeo/wiki/How-to-Obtain-GeoLite2-License-from-MaxMind).
-> Also we are using Virus Total API to enrich results, you may see how to obtain your API key from the same WIKI page as MaxMind DB.
+> For security reasons, we recommend using your own Account ID and License Key for MaxMind DB and your own API Key for Virus Total. For guidance on how to obtain these, please refer to our [WIKI](https://github.com/jon-brandy/HolmesGeo/wiki/How-to-Obtain-GeoLite2-License-from-MaxMind).
 
 ```txt
 # Can be seen at install.sh
