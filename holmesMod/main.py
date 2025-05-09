@@ -2,7 +2,7 @@ import sys
 import os
 from termcolor import colored
 
-from holmesMod.utils.cli import parse_arguments, display_banner, display_guides
+from holmesMod.utils.cli import parse_arguments, display_banner
 from holmesMod.utils.ip_ext import apache_ipext, csv_ipext, read_stdin_ips
 from holmesMod.utils.ip_checker import ipcheck_mod
 from holmesMod.utils.file_utils import get_output_path
@@ -26,7 +26,6 @@ def main():
     args = parse_arguments()
     if not args.mode:
         colored_print("[!] Error: Please specify an input method (--apache, --csv, |, or --check).", "red", "bold")
-        # display_guides()
         sys.exit(1)
     
     if not args.file:
