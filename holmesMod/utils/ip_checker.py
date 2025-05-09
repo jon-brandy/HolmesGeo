@@ -39,10 +39,10 @@ def ipcheck_mod(ip_list, output_file_path):
                 ipaddress.ip_address(entry)
                 ip = entry 
             except ValueError:
-                colored_print(f'[*] Processing domain: {entry}', 'cyan')
+                # colored_print(f'[*] Processing domain: {entry}', 'cyan')
                 try:
                     ip = socket.gethostbyname(entry)
-                    colored_print(f'[+] Resolved domain {entry} to IP: {ip}', 'green')
+                    # colored_print(f'[+] Resolved domain {entry} to IP: {ip}', 'green')
                 except socket.gaierror:
                     colored_print(f'[!] Cannot resolve domain: {entry}. Skipping.', 'red', 'bold')
                     continue
