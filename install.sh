@@ -20,9 +20,9 @@ echo -e "\n${BOLD}Configuring GeoIP...${NC}"
 if [ ! -f "/etc/GeoIP.conf" ]; then
     echo "GeoIP configuration file not found. Creating a new one..."
     sudo bash -c 'cat > /etc/GeoIP.conf <<EOF
-UserId 1158479
-LicenseKey <<PASTE_ACCOUNT_ID_HERE>>
-EditionIDs <<PASTE_LICENSE_KEY_HERE>>
+UserId <<PASTE_ACCOUNT_ID_HERE>>
+LicenseKey <<PASTE_LICENSE_KEY_HERE>>
+EditionIDs GeoLite2-Country GeoLite2-City GeoLite2-ASN
 DatabaseDirectory /usr/local/share/GeoIP
 EOF'
     echo "GeoIP configuration file created successfully!"
