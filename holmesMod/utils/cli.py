@@ -65,6 +65,8 @@ def parse_arguments():
     
     parser.add_argument("--column", default=None, 
                         help="Column name containing IP addresses in CSV mode")
+    parser.add_argument("--virtot", action="store_true",
+                        help="Perform additional certificate and registrar lookup")
     
     display_guides()
     args = parser.parse_args()
