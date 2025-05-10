@@ -119,6 +119,15 @@ cat samples/iplist.txt| ./chk.sh
 cat ip.txt | python -m holmesMod.main
 ```
 
+> ### To Perform Additional Certificate and Registrar Lookup
+
+```bash
+python -m holmesMod.main --check list_ip.txt --virtot
+python -m holmesMod.main --apache apache.log --virtot
+python -m holmesMod.main --csv file.csv --virtot
+python -m holmesMod.main --csv file.csv --column source_ip --virtot
+```
+
 ## [❓] Output
 
 The tool generates two output files in the `results` directory:
