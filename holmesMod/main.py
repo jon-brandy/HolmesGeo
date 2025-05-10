@@ -12,19 +12,19 @@ def main():
     ensure_dirs_exist()
     logger = setup_logging()
     display_banner()
+    args = parse_arguments()
     
     is_piped_input = not sys.stdin.isatty()
     if is_piped_input:
         ips = read_stdin_ips()
         if ips:
             outp = get_output_path()
-            ipcheck_mod(ips, outp, args.virtot if hasattr(args, 'virtot') else False)
+            ipcheck_mod(ips, outp, args.virtot)
         else:
             colored_print("[!] No valid IP addresses received from stdin.", "red", "bold")
         return
 
-    args = parse_arguments()
-    if not args.mode:
+    if not is_piped_input and not args.mode:
         colored_print("[!] Error: Please specify an input method (--apache, --csv, |, or --check).", "red", "bold")
         sys.exit(1)
     
