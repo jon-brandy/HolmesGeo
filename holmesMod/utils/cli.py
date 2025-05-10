@@ -37,8 +37,13 @@ def display_guides():
 | Usage Example:                                                               |
 | python3 -m holmesMod.main --apache apache.log                                |
 | python3 -m holmesMod.main --csv file.csv                                     |
-| python -m holmesMod.main --csv file.csv --column source_ip                   |
-| python -m holmesMod.main --check list_ip.txt                                 |
+| python3 -m holmesMod.main --csv file.csv --column source_ip                  |
+| python3 -m holmesMod.main --check list_ip.txt                                |
+| python3 -m holmesMod.main --check list_ip.txt --virtot                       |
+| python3 -m holmesMod.main --apache apache.log --virtot                       |
+| python3 -m holmesMod.main --csv file.csv --virtot                            |
+| python3 -m holmesMod.main --csv file.csv --column source_ip --virtot         |
+| cat ip.txt | python3 -m holmesMod.main                                       |
 |                                                                              |
 | ./chk.sh --check samples/iplist.txt                                          |
 | ./chk.sh --csv samples/sample.csv --column ip_address                        |
