@@ -59,7 +59,6 @@ def ipcheck_mod(ip_list, output_file_path, virtot=False):
             ip_info = get_ip_info(ip)
             
             if ip_info and virtot:
-                print("MASUK:NIH")
                 cert_cn, registrar = get_ssl_registrar(domain if domain else ip)
                 ip_info.extend([cert_cn, registrar])
                 writer.writerow(ip_info)
