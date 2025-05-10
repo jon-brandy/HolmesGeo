@@ -116,16 +116,16 @@ python3 -m holmesMod.main --check list_ip.txt
 echo "8.8.8.8" | ./chk.sh
 echo -e "8.8.8.8\n37.252.185.229" | ./chk.sh
 cat samples/iplist.txt| ./chk.sh
-cat ip.txt | python -m holmesMod.main
+cat ip.txt | python3 -m holmesMod.main
 ```
 
 > ### To Perform Additional Certificate and Registrar Lookup
 
 ```bash
-python -m holmesMod.main --check list_ip.txt --virtot
-python -m holmesMod.main --apache apache.log --virtot
-python -m holmesMod.main --csv file.csv --virtot
-python -m holmesMod.main --csv file.csv --column source_ip --virtot
+python3 -m holmesMod.main --check list_ip.txt --virtot
+python3 -m holmesMod.main --apache apache.log --virtot
+python3 -m holmesMod.main --csv file.csv --virtot
+python3 -m holmesMod.main --csv file.csv --column source_ip --virtot
 ```
 
 ## [❓] Output
