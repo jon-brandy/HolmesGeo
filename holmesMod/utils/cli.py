@@ -43,12 +43,13 @@ def display_guides():
 | python3 -m holmesMod.main --apache apache.log --virtot                       |
 | python3 -m holmesMod.main --csv file.csv --virtot                            |
 | python3 -m holmesMod.main --csv file.csv --column source_ip --virtot         |
-| cat ip.txt | python3 -m holmesMod.main                                       |
+| cat ip.txt | python3 -m holmesMod.main --virtot                              |
 |                                                                              |
+| ./chk.sh --check samples/iplist.txt                                          |
 | ./chk.sh --check samples/iplist.txt                                          |
 | ./chk.sh --csv samples/sample.csv --column ip_address                        |
 | ./chk.sh --apache samples/sample_log.txt                                     |
-| cat samples/iplist.txt | ./chk.sh                                            |
+| cat samples/iplist.txt | ./chk.sh --virtot                                   |
 | echo "8.8.8.8" | ./chk.sh                                                    |
 | echo -e "8.8.8.8\\n37.252.185.229" | ./chk.sh                                 |
 |                                                                              |
