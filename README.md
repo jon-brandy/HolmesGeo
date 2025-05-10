@@ -126,6 +126,10 @@ python3 -m holmesMod.main --check list_ip.txt --virtot
 python3 -m holmesMod.main --apache apache.log --virtot
 python3 -m holmesMod.main --csv file.csv --virtot
 python3 -m holmesMod.main --csv file.csv --column source_ip --virtot
+./chk.sh --check samples/iplist.txt.txt --virtot
+./chk.sh --apache samples/sample_log.txt --virtot
+./chk.sh --csv samples/sample.csv --virtot
+echo "8.8.8.8" | ./chk.sh --virtot
 ```
 
 ## [❓] Output
