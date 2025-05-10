@@ -11,7 +11,7 @@ from termcolor import colored
 
 from .config import get_db_path
 
-def ipcheck_mod(ip_list, output_file_path):
+def ipcheck_mod(ip_list, output_file_path, virtot=False):
     results_dir = os.path.dirname(output_file_path)
     os.makedirs(results_dir, exist_ok=True)
     
@@ -28,8 +28,13 @@ def ipcheck_mod(ip_list, output_file_path):
         writer = csv.writer(file)
         header = [
             'IP Address', 'City', 'City Latitude', 'City Longitude', 'Country', 'Country Code', 
-            'Continent', 'ASN Number', 'ASN Organization', 'Network', 'Reverse DNS', 'Certificate CN', 'Domain Registrar URL'
+            'Continent', 'ASN Number', 'ASN Organization', 'Network', 'Reverse DNS'
         ]
+
+        if virtot:
+            header.extend([
+                'Certificate CN', 'Domain Registrar URL'
+            ])
         writer.writerow(header)
     
         print(",".join(header))
@@ -53,9 +58,13 @@ def ipcheck_mod(ip_list, output_file_path):
 
             ip_info = get_ip_info(ip)
             
-            if ip_info:
+            if ip_info and virtot:
+                print("MASUK:NIH")
                 cert_cn, registrar = get_ssl_registrar(domain if domain else ip)
                 ip_info.extend([cert_cn, registrar])
+                writer.writerow(ip_info)
+                print(",".join(str(item) for item in ip_info))
+            else:
                 writer.writerow(ip_info)
                 print(",".join(str(item) for item in ip_info))
 
@@ -179,7 +188,6 @@ def get_ip_info(ip):
     asnmmdb = get_db_path('asn')
     countmmdb = get_db_path('country')
     rev_dns = rdns(ip)
-    sslreg = get_ssl_registrar(ip)
     if rev_dns == "N/A":
         colored_print(f'[!] No reverse DNS found for IP: {ip}', 'yellow')  
 
