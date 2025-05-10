@@ -148,8 +148,8 @@ The tool generates two output files in the `results` directory:
 - ASN Organization
 - Network
 - Reverse DNS
-- Certificate CN (if using --virtot)
-- Domain Registrar URL (if using --virtot)
+- Certificate CN 
+- Domain Registrar URL 
 
 2. An Excel (XLSX) file with the same information, formatted for better readability.
 
