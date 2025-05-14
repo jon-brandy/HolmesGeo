@@ -136,6 +136,14 @@ python3 -m holmesMod.main --csv file.csv --column source_ip --virtot
 echo "8.8.8.8" | ./chk.sh --virtot
 ```
 
+> ### To Disable Reverse DNS Check
+
+```bash
+python3 -m holmesMod.main --check list_ip.txt --no-rdns
+cat ip.txt | python3 -m holmesMod.main --no-rdns
+./chk.sh --check samples/iplist.txt --no-rdns
+```
+
 ## [❓] Output
 
 The tool generates two output files in the `results` directory:
