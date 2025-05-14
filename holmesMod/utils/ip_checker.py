@@ -5,11 +5,48 @@ import socket
 import ipaddress
 import geoip2.database
 import pandas as pd
+import glob
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment, Border, Side
 from termcolor import colored
 
 from .config import get_db_path
+
+def c2_check(ip_domain):
+    try:
+        c2_db_path = os.path.join(os.path.dirname(get_db_path('city')), 'C2')
+        
+        if not os.path.exists(c2_db_path):
+            colored_print(f"[!] C2 database directory not found at {c2_db_path}", "yellow", "bold")
+            return "N/A"
+        c2_files = glob.glob(os.path.join(c2_db_path, "*.txt"))
+        
+        if not c2_files:
+            colored_print(f"[!] No C2 database files found in {c2_db_path}", "yellow", "bold")
+            return "N/A"
+            
+        for c2_file in c2_files:
+            try:
+                with open(c2_file, 'r', encoding='utf-8', errors='ignore') as f:
+                    content = f.read().splitlines()
+                    content = [line.strip() for line in content if line.strip()]
+                    
+                    if ip_domain in content:
+                        category = os.path.basename(c2_file).replace('.txt', '').upper()                
+                        if '_c2' in category.lower():
+                            category = category.replace('_C2', ' C2').replace('_c2', ' C2')
+                        elif '_vpn' in category.lower():
+                            category = category.replace('_VPN', ' VPN').replace('_vpn', ' VPN')
+                        
+                        return category
+            except Exception as e:
+                colored_print(f"[!] Error reading C2 database file {c2_file}: {str(e)}", "yellow")
+                continue
+                
+        return "N/A"
+    except Exception as e:
+        colored_print(f"[!] Error in c2_check: {str(e)}", "red")
+        return "N/A"
 
 def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None, no_rdns=False):
     results_dir = os.path.dirname(output_file_path)
@@ -27,7 +64,7 @@ def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None, no_rd
     with open(outfp, mode='w', newline='') as file:
         writer = csv.writer(file)
         header = [
-            'IP Address', 'City', 'City Latitude', 'City Longitude', 'Country', 'Country Code', 
+            'IP Address', 'IP Category', 'City', 'City Latitude', 'City Longitude', 'Country', 'Country Code', 
             'Continent', 'ASN Number', 'ASN Organization', 'Network'
         ]
 
@@ -70,11 +107,26 @@ def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None, no_rd
                     colored_print(f'[!] Cannot resolve domain: {entry}. Skipping.', 'red', 'bold')
                     continue
 
+            # Check if IP or domain is in C2 database
+            original_entry = entry  # Save the original input (IP or domain) for C2 check
+            c2_category = c2_check(original_entry)
+            
+            # If no match on the original entry and we have both IP and domain, try the other one
+            if c2_category == "N/A" and domain and domain != "N/A":
+                c2_category = c2_check(domain)
+            
+            # If still no match, try with the resolved IP (if the original entry was a domain)
+            if c2_category == "N/A" and original_entry != ip:
+                c2_category = c2_check(ip)
+
             ip_info = get_ip_info(ip, no_rdns)
             
             if not ip_info:
                 colored_print(f'[!] Could not retrieve information for IP: {ip}. Skipping.', 'red')
                 continue
+            
+            # Insert the C2 category as the second element in the list
+            ip_info.insert(1, c2_category)
                 
             if virtot:
                 cert_cn, registrar = get_ssl_registrar(domain if domain else ip)
@@ -213,7 +265,7 @@ def get_ip_info(ip, no_rdns=False):
         if rev_dns == "N/A":
             colored_print(f'[!] No reverse DNS found for IP: {ip}', 'yellow')
     else:
-        rev_dns = "N/A" 
+        rev_dns = "N/A"  # Skip reverse DNS lookup
 
     try:
         with geoip2.database.Reader(citymmdb) as reader:
@@ -245,6 +297,7 @@ def get_ip_info(ip, no_rdns=False):
     if city_info and country_info and asn_info:
         result = [
             ip, 
+            # Note: C2 category is added in ipcheck_mod function, not here
             city_info.city.names.get('en', 'N/A'),
             city_info.location.latitude if city_info.location.latitude else 'N/A',
             city_info.location.longitude if city_info.location.longitude else 'N/A',
@@ -288,6 +341,11 @@ def create_excel_report(csv_file):
     if 'User Agent' in df.columns:
         ua_col_idx = list(df.columns).index('User Agent') + 1  # +1 because Excel is 1-indexed
         ws.column_dimensions[chr(65 + ua_col_idx)].width = 60  # Make User Agent column wider
+        
+    # Make the C2 Category column stand out with a good width
+    if 'Cat' in df.columns:
+        cat_col_idx = list(df.columns).index('Cat') + 1  # +1 because Excel is 1-indexed
+        ws.column_dimensions[chr(65 + cat_col_idx)].width = 20
 
     wb.save(excel_file)
     colored_print("[STAGE-2]", 'magenta', 'bold')
