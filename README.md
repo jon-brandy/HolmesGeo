@@ -4,6 +4,10 @@
    <img src="https://github.com/user-attachments/assets/078a61db-b3ac-4dcc-a1e3-2f25a14ba274" width="350">
 </p>
 
+![License](https://img.shields.io/github/license/jon-brandy/HolmesGeo)
+![Geolocation Check](https://img.shields.io/badge/Geolocation_Checker-b87333)
+![CSV-EXCEL](https://img.shields.io/badge/Tabular_File_Formats-Output-2e5339)
+
 
 ## [📃] Features
 
