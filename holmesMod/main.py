@@ -1,7 +1,6 @@
 import sys
 import os
 from termcolor import colored
-
 from holmesMod.utils.cli import parse_arguments, display_banner
 from holmesMod.utils.ip_ext import apache_ipext, csv_ipext, read_stdin_ips
 from holmesMod.utils.ip_checker import ipcheck_mod, get_ssl_registrar
@@ -23,7 +22,7 @@ def main():
         else:
             colored_print("[!] No valid IP addresses received from stdin.", "red", "bold")
         return
-
+    
     if not is_piped_input and not args.mode:
         colored_print("[!] Error: Please specify an input method (--apache, --csv, |, or --check).", "red", "bold")
         sys.exit(1)
@@ -35,15 +34,22 @@ def main():
     outp = get_output_path(args.file)
         
     if args.mode == "apache":
-        ips = apache_ipext(args.file)
-        if ips:
-            ipcheck_mod(ips, outp, args.virtot)
+        result = apache_ipext(args.file)
+        if isinstance(result, tuple) and len(result) == 2:
+            ips, user_agents = result
+            if ips:
+                colored_print(f"[+] Found {len(ips)} IPs with user agents in Apache log.", "green")
+                ipcheck_mod(ips, outp, args.virtot, user_agents)
+        else:
+            ips = result
+            if ips:
+                ipcheck_mod(ips, outp, args.virtot)
     
     elif args.mode == "csv":
         ips = csv_ipext(args.file, args.column)
         if ips:
             ipcheck_mod(ips, outp, args.virtot)
-
+    
     elif args.mode == "check":
         try:
             with open(args.file, 'r') as ip_file:
@@ -54,7 +60,6 @@ def main():
 
 def colored_print(message, color, style=None):
     print(colored(message, color, attrs=[style] if style else []))
-
 
 if __name__ == "__main__":
     main()
