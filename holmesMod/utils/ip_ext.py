@@ -27,8 +27,6 @@ def apache_ipext(log_file_path):
                     except ValueError:
                         # Invalid IP format
                         continue
-        
-        colored_print(f"[+] Extracted {len(ips)} IP addresses with user agents from the Apache log file.\n", 'green')
     except FileNotFoundError:
         colored_print(f"[!] Error: File {log_file_path} not found.", 'red', 'bold')
         return [], []
