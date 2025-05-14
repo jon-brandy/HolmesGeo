@@ -150,6 +150,7 @@ The tool generates two output files in the `results` directory:
 
 1. A CSV file containing the following information for each IP:
 - IP Address
+- IP Category
 - City
 - City Latitude
 - City Longitude
