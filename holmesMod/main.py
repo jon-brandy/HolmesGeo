@@ -38,7 +38,6 @@ def main():
         if isinstance(result, tuple) and len(result) == 2:
             ips, user_agents = result
             if ips:
-                colored_print(f"[+] Found {len(ips)} IPs with user agents in Apache log.", "green")
                 ipcheck_mod(ips, outp, args.virtot, user_agents)
         else:
             ips = result
