@@ -34,19 +34,25 @@ def display_guides():
 |  - Input from stdin is automatically detected when using pipe (|).           |
 |  - Use --check to perform IP check from a text file with one IP per line.    |
 |                                                                              |
+| Additional Options:                                                          |
+|  - Use --no-rdns to disable reverse DNS lookups (speeds up processing).      |
+|  - Use --virtot to perform additional certificate and registrar lookup.      |
+|                                                                              |
 | Usage Example:                                                               |
 | python3 -m holmesMod.main --apache apache.log                                |
 | python3 -m holmesMod.main --csv file.csv                                     |
 | python3 -m holmesMod.main --csv file.csv --column source_ip                  |
 | python3 -m holmesMod.main --check list_ip.txt                                |
 | python3 -m holmesMod.main --check list_ip.txt --virtot                       |
+| python3 -m holmesMod.main --check list_ip.txt --no-rdns                      |
 | python3 -m holmesMod.main --apache apache.log --virtot                       |
 | python3 -m holmesMod.main --csv file.csv --virtot                            |
 | python3 -m holmesMod.main --csv file.csv --column source_ip --virtot         |
 | cat ip.txt | python3 -m holmesMod.main --virtot                              |
+| cat ip.txt | python3 -m holmesMod.main --no-rdns                             |
 |                                                                              |
 | ./chk.sh --check samples/iplist.txt                                          |
-| ./chk.sh --check samples/iplist.txt                                          |
+| ./chk.sh --check samples/iplist.txt --no-rdns                                |
 | ./chk.sh --csv samples/sample.csv --column ip_address                        |
 | ./chk.sh --apache samples/sample_log.txt                                     |
 | cat samples/iplist.txt | ./chk.sh --virtot                                   |
@@ -73,6 +79,8 @@ def parse_arguments():
                         help="Column name containing IP addresses in CSV mode")
     parser.add_argument("--virtot", action="store_true",
                         help="Perform additional certificate and registrar lookup")
+    parser.add_argument("--no-rdns", action="store_true",
+                        help="Disable reverse DNS lookups (speeds up processing)")
     
     display_guides()
     args = parser.parse_args()
