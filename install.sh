@@ -84,9 +84,4 @@ EOF
 chmod +x chk.sh
 
 echo -e "\n${CYAN}[+] Installation & Configuration Finished [+]${NC}"
-echo -e "You can now run the IP Checker using: ${GREEN}./chk.sh --help${NC}"
-echo -e "Example: ${GREEN}./chk.sh --check samples/iplist.txt${NC}"
-echo -e "Example: ${GREEN}./chk.sh --csv samples/sample.csv --column ip_address${NC}"
-echo -e "Example: ${GREEN}./chk.sh --apache samples/sample_log.txt${NC}"
-echo -e "Example: ${GREEN}cat samples/iplist.txt | ./chk.sh${NC}"
-echo -e "Example: ${GREEN}37.252.185.229 | ./chk.sh${NC}"
+echo -e "To open guides, you can run: ${GREEN}./chk.sh --help${NC}"
