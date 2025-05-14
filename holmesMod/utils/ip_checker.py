@@ -11,7 +11,7 @@ from termcolor import colored
 
 from .config import get_db_path
 
-def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None):
+def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None, no_rdns=False):
     results_dir = os.path.dirname(output_file_path)
     os.makedirs(results_dir, exist_ok=True)
     
@@ -28,8 +28,11 @@ def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None):
         writer = csv.writer(file)
         header = [
             'IP Address', 'City', 'City Latitude', 'City Longitude', 'Country', 'Country Code', 
-            'Continent', 'ASN Number', 'ASN Organization', 'Network', 'Reverse DNS'
+            'Continent', 'ASN Number', 'ASN Organization', 'Network'
         ]
+
+        if not no_rdns:
+            header.append('Reverse DNS')
 
         if virtot:
             header.extend([
@@ -49,18 +52,25 @@ def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None):
             try:
                 ipaddress.ip_address(entry)
                 ip = entry 
-                rev_dns = rdns(ip)
-                if rev_dns != "N/A":
-                    domain = rev_dns
+                if not no_rdns:
+                    rev_dns = rdns(ip)
+                    if rev_dns != "N/A":
+                        domain = rev_dns
+                else:
+                    rev_dns = "N/A"  # Skip reverse DNS lookup
             except ValueError:
                 domain = entry
                 try:
                     ip = socket.gethostbyname(entry)
+                    if not no_rdns:
+                        rev_dns = rdns(ip)
+                    else:
+                        rev_dns = "N/A"  # Skip reverse DNS lookup
                 except socket.gaierror:
                     colored_print(f'[!] Cannot resolve domain: {entry}. Skipping.', 'red', 'bold')
                     continue
 
-            ip_info = get_ip_info(ip)
+            ip_info = get_ip_info(ip, no_rdns)
             
             if not ip_info:
                 colored_print(f'[!] Could not retrieve information for IP: {ip}. Skipping.', 'red')
@@ -189,7 +199,7 @@ def get_ssl_registrar(ip):
         
     return certificate, registrar
 
-def get_ip_info(ip):
+def get_ip_info(ip, no_rdns=False):
     city_info = None
     country_info = None
     asn_info = None
@@ -197,9 +207,13 @@ def get_ip_info(ip):
     citymmdb = get_db_path('city')
     asnmmdb = get_db_path('asn')
     countmmdb = get_db_path('country')
-    rev_dns = rdns(ip)
-    if rev_dns == "N/A":
-        colored_print(f'[!] No reverse DNS found for IP: {ip}', 'yellow')  
+    
+    if not no_rdns:
+        rev_dns = rdns(ip)
+        if rev_dns == "N/A":
+            colored_print(f'[!] No reverse DNS found for IP: {ip}', 'yellow')
+    else:
+        rev_dns = "N/A" 
 
     try:
         with geoip2.database.Reader(citymmdb) as reader:
@@ -229,7 +243,7 @@ def get_ip_info(ip):
         colored_print(f'[!] Error: Database file {countmmdb} not found', 'red', 'bold')
 
     if city_info and country_info and asn_info:
-        return [
+        result = [
             ip, 
             city_info.city.names.get('en', 'N/A'),
             city_info.location.latitude if city_info.location.latitude else 'N/A',
@@ -239,9 +253,13 @@ def get_ip_info(ip):
             city_info.continent.names.get('en', 'N/A'),
             asn_info.autonomous_system_number if asn_info else 'N/A',
             asn_info.autonomous_system_organization if asn_info else 'N/A',
-            asn_info.network if asn_info else 'N/A',
-            rev_dns
+            asn_info.network if asn_info else 'N/A'
         ]
+        
+        if not no_rdns:
+            result.append(rev_dns)
+            
+        return result
     
     return None
 
