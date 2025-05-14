@@ -5,7 +5,7 @@
 </p>
 
 ![License](https://img.shields.io/github/license/jon-brandy/HolmesGeo)
-![Geolocation Check](https://img.shields.io/badge/Geolocation_Checker-b87333)
+![IP Geolocation Check](https://img.shields.io/badge/IP_Geolocation_Checker-b87333)
 ![CSV-EXCEL](https://img.shields.io/badge/Tabular_File_Formats-Output-2e5339)
 
 
