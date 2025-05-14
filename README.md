@@ -149,7 +149,8 @@ The tool generates two output files in the `results` directory:
 - Network
 - Reverse DNS
 - Certificate CN 
-- Domain Registrar URL 
+- Domain Registrar URL
+- User Agent
 
 2. An Excel (XLSX) file with the same information, formatted for better readability.
 
