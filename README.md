@@ -11,11 +11,11 @@
 
 ## [📃] Features
 
-- Extract IP addresses from Apache log files
-- Extract IP addresses from CSV files
-- Read IP addresses from stdin or text files
-- Get geographic and network information for IP addresses
-- Generate reports in CSV and Excel formats
+- Extract IP addresses from Apache log files.
+- Extract IP addresses from CSV files.
+- Read IP addresses from stdin or text files.
+- Get geographic and network information for IP addresses.
+- Generate reports in CSV and Excel formats.
 
 ## [⚙️] Installation
 
