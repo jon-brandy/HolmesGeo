@@ -1,8 +1,6 @@
 # HolmesGeo: A Simple Tool for IP Geolocation Check.
 
-<p align="center">
-   <img src="https://github.com/user-attachments/assets/078a61db-b3ac-4dcc-a1e3-2f25a14ba274" width="350">
-</p>
+![holmes-geo-banner](https://github.com/user-attachments/assets/733f293a-a2f1-42be-8c9e-8e8b13a26bd8)
 
 ![License](https://img.shields.io/github/license/jon-brandy/HolmesGeo)
 ![IP Geolocation Check](https://img.shields.io/badge/IP_Geolocation_Checker-b87333)
