@@ -18,7 +18,7 @@ def main():
         ips = read_stdin_ips()
         if ips:
             outp = get_output_path()
-            ipcheck_mod(ips, outp, args.virtot)
+            ipcheck_mod(ips, outp, args.virtot, no_rdns=args.no_rdns)
         else:
             colored_print("[!] No valid IP addresses received from stdin.", "red", "bold")
         return
@@ -38,22 +38,22 @@ def main():
         if isinstance(result, tuple) and len(result) == 2:
             ips, user_agents = result
             if ips:
-                ipcheck_mod(ips, outp, args.virtot, user_agents)
+                ipcheck_mod(ips, outp, args.virtot, user_agents, no_rdns=args.no_rdns)
         else:
             ips = result
             if ips:
-                ipcheck_mod(ips, outp, args.virtot)
+                ipcheck_mod(ips, outp, args.virtot, no_rdns=args.no_rdns)
     
     elif args.mode == "csv":
         ips = csv_ipext(args.file, args.column)
         if ips:
-            ipcheck_mod(ips, outp, args.virtot)
+            ipcheck_mod(ips, outp, args.virtot, no_rdns=args.no_rdns)
     
     elif args.mode == "check":
         try:
             with open(args.file, 'r') as ip_file:
                 ips = ip_file.readlines()
-                ipcheck_mod(ips, outp, args.virtot)
+                ipcheck_mod(ips, outp, args.virtot, no_rdns=args.no_rdns)
         except FileNotFoundError:
             colored_print(f"[!] Error: File {args.file} not found.", "red", "bold")
 
