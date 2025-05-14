@@ -11,7 +11,7 @@ from termcolor import colored
 
 from .config import get_db_path
 
-def ipcheck_mod(ip_list, output_file_path, virtot=False):
+def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None):
     results_dir = os.path.dirname(output_file_path)
     os.makedirs(results_dir, exist_ok=True)
     
@@ -35,11 +35,15 @@ def ipcheck_mod(ip_list, output_file_path, virtot=False):
             header.extend([
                 'Certificate CN', 'Domain Registrar URL'
             ])
+            
+        if user_agents is not None:
+            header.append('User Agent')
+            
         writer.writerow(header)
     
         print(",".join(header))
 
-        for entry in ip_list:
+        for i, entry in enumerate(ip_list):
             entry = entry.strip()
             domain = None
             try:
@@ -58,14 +62,21 @@ def ipcheck_mod(ip_list, output_file_path, virtot=False):
 
             ip_info = get_ip_info(ip)
             
-            if ip_info and virtot:
+            if not ip_info:
+                colored_print(f'[!] Could not retrieve information for IP: {ip}. Skipping.', 'red')
+                continue
+                
+            if virtot:
                 cert_cn, registrar = get_ssl_registrar(domain if domain else ip)
                 ip_info.extend([cert_cn, registrar])
-                writer.writerow(ip_info)
-                print(",".join(str(item) for item in ip_info))
-            else:
-                writer.writerow(ip_info)
-                print(",".join(str(item) for item in ip_info))
+            
+            if user_agents is not None and i < len(user_agents):
+                ip_info.append(user_agents[i])
+            elif user_agents is not None:
+                ip_info.append("N/A")
+                
+            writer.writerow(ip_info)
+            print(",".join(str(item) for item in ip_info))
 
     colored_print('\n\n\n[STAGE-1]', 'light_yellow', 'bold')
     print(f'Result saved to: {outfp}')
@@ -254,6 +265,11 @@ def create_excel_report(csv_file):
         for cell in row:
             cell.alignment = alignment
             cell.border = border
+
+    # Adjust User Agent column width if it exists
+    if 'User Agent' in df.columns:
+        ua_col_idx = list(df.columns).index('User Agent') + 1  # +1 because Excel is 1-indexed
+        ws.column_dimensions[chr(65 + ua_col_idx)].width = 60  # Make User Agent column wider
 
     wb.save(excel_file)
     colored_print("[STAGE-2]", 'magenta', 'bold')
