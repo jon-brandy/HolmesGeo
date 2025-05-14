@@ -1,7 +1,7 @@
 # HolmesGeo: A Simple Tool for IP Geolocation Check.
 
-<p align="center">
-   <img src="https://github.com/user-attachments/assets/078a61db-b3ac-4dcc-a1e3-2f25a14ba274" width="250">
+<p align="left">
+   <img src="https://github.com/user-attachments/assets/078a61db-b3ac-4dcc-a1e3-2f25a14ba274" width="350">
 </p>
 
 ![License](https://img.shields.io/github/license/jon-brandy/HolmesGeo)
