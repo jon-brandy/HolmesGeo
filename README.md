@@ -6,6 +6,7 @@
 ![IP Geolocation Check](https://img.shields.io/badge/IP_Geolocation_Checker-129990)
 ![CSV-EXCEL](https://img.shields.io/badge/Tabular_File_Formats-Output-2e5339)
 ![IP-based threat attribution tool](https://img.shields.io/badge/IP_Based-Threat_Intelligence_Tool-644A07)
+![Plaguards Module](https://img.shields.io/badge/Plaguards_Module-white)
 
 
 ## [📃] Features
