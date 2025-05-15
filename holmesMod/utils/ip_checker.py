@@ -12,40 +12,39 @@ from termcolor import colored
 
 from .config import get_db_path
 
-def c2_check(ip_domain):
+def outsrc_check(ip_domain):
     try:
-        c2_db_path = os.path.join(os.path.dirname(get_db_path('city')), 'C2')
+        db_path = os.path.join(os.path.dirname(get_db_path('city')), 'outsource_db')
         
-        if not os.path.exists(c2_db_path):
-            colored_print(f"[!] C2 database directory not found at {c2_db_path}", "yellow", "bold")
+        if not os.path.exists(db_path):
+            colored_print(f"[!] Outsource database directory not found at {db_path}", "yellow", "bold")
             return "N/A"
-        c2_files = glob.glob(os.path.join(c2_db_path, "*.txt"))
+        outsrc_files = glob.glob(os.path.join(db_path, "*.txt"))
         
-        if not c2_files:
-            colored_print(f"[!] No C2 database files found in {c2_db_path}", "yellow", "bold")
+        if not outsrc_files:
+            colored_print(f"[!] No outsource database files found in {db_path}", "yellow", "bold")
             return "N/A"
             
-        for c2_file in c2_files:
+        for file in outsrc_files:
             try:
-                with open(c2_file, 'r', encoding='utf-8', errors='ignore') as f:
+                with open(file, 'r', encoding='utf-8', errors='ignore') as f:
                     content = f.read().splitlines()
                     content = [line.strip() for line in content if line.strip()]
                     
                     if ip_domain in content:
-                        category = os.path.basename(c2_file).replace('.txt', '').upper()                
-                        if '_c2' in category.lower():
-                            category = category.replace('_C2', ' C2').replace('_c2', ' C2')
-                        elif '_vpn' in category.lower():
-                            category = category.replace('_VPN', ' VPN').replace('_vpn', ' VPN')
-                        
+                        category = os.path.basename(file).replace('.txt', '').upper()                
+                        # if '_c2' in category.lower():
+                        #     category = category.replace('_C2', ' C2').replace('_c2', ' C2')
+                        # elif '_vpn' in category.lower():
+                        #     category = category.replace('_VPN', ' VPN').replace('_vpn', ' VPN')
                         return category
             except Exception as e:
-                colored_print(f"[!] Error reading C2 database file {c2_file}: {str(e)}", "yellow")
+                colored_print(f"[!] Error reading outsource database file {file}: {str(e)}", "yellow")
                 continue
                 
         return "N/A"
     except Exception as e:
-        colored_print(f"[!] Error in c2_check: {str(e)}", "red")
+        colored_print(f"[!] Error in outsrc_check: {str(e)}", "red")
         return "N/A"
 
 def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None, no_rdns=False):
@@ -107,17 +106,16 @@ def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None, no_rd
                     colored_print(f'[!] Cannot resolve domain: {entry}. Skipping.', 'red', 'bold')
                     continue
 
-            # Check if IP or domain is in C2 database
-            original_entry = entry  # Save the original input (IP or domain) for C2 check
-            c2_category = c2_check(original_entry)
+            original_entry = entry  # Save the original input (IP or domain) for outsource IP check
+            ip_cat = outsrc_check(original_entry)
             
             # If no match on the original entry and we have both IP and domain, try the other one
-            if c2_category == "N/A" and domain and domain != "N/A":
-                c2_category = c2_check(domain)
+            if ip_cat == "N/A" and domain and domain != "N/A":
+                ip_cat = outsrc_check(domain)
             
             # If still no match, try with the resolved IP (if the original entry was a domain)
-            if c2_category == "N/A" and original_entry != ip:
-                c2_category = c2_check(ip)
+            if ip_cat == "N/A" and original_entry != ip:
+                ip_cat = outsrc_check(ip)
 
             ip_info = get_ip_info(ip, no_rdns)
             
@@ -126,7 +124,7 @@ def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None, no_rd
                 continue
             
             # Insert the C2 category as the second element in the list
-            ip_info.insert(1, c2_category)
+            ip_info.insert(1, ip_cat)
                 
             if virtot:
                 cert_cn, registrar = get_ssl_registrar(domain if domain else ip)
