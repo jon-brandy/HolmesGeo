@@ -33,10 +33,6 @@ def outsrc_check(ip_domain):
                     
                     if ip_domain in content:
                         category = os.path.basename(file).replace('.txt', '').upper()                
-                        # if '_c2' in category.lower():
-                        #     category = category.replace('_C2', ' C2').replace('_c2', ' C2')
-                        # elif '_vpn' in category.lower():
-                        #     category = category.replace('_VPN', ' VPN').replace('_vpn', ' VPN')
                         return category
             except Exception as e:
                 colored_print(f"[!] Error reading outsource database file {file}: {str(e)}", "yellow")
