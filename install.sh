@@ -75,6 +75,12 @@ else
     echo "[!] Skipping VirusTotal API Key configuration, no key found."
 fi
 
+THREAT_DB_PATH="holmesMod/db/outsource_db/threat_intell.zip"
+EXTRACT_PATH="holmesMod/db/outsource_db"
+unzip -o "$THREAT_DB_PATH" -d "$EXTRACT_PATH"
+chmod -R 644 "$EXTRACT_PATH"/*.* 2>/dev/null
+find "$EXTRACT_PATH" -type d -exec chmod 755 {} \; 2>/dev/null
+
 echo -e "\n${BOLD}Forging run script... :D${NC}"
 cat > chk.sh <<EOF
 #!/bin/bash
