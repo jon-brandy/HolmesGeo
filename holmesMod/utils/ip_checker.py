@@ -24,6 +24,8 @@ def outsrc_check(ip_domain):
         if not outsrc_files:
             colored_print(f"[!] No outsource database files found in {db_path}", "yellow", "bold")
             return "N/A"
+        
+        found_categories = []
             
         for file in outsrc_files:
             try:
@@ -32,13 +34,16 @@ def outsrc_check(ip_domain):
                     content = [line.strip() for line in content if line.strip()]
                     
                     if ip_domain in content:
-                        category = os.path.basename(file).replace('.txt', '').upper()                
-                        return category
+                        category = os.path.basename(file).replace('.txt', '').upper()
+                        found_categories.append(category)
             except Exception as e:
                 colored_print(f"[!] Error reading outsource database file {file}: {str(e)}", "yellow")
                 continue
-                
-        return "N/A"
+        
+        if found_categories:
+            return ", ".join(found_categories)
+        else:
+            return "N/A"
     except Exception as e:
         colored_print(f"[!] Error in outsrc_check: {str(e)}", "red")
         return "N/A"
@@ -92,6 +97,7 @@ def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None, no_rd
                     rev_dns = "N/A"  # Skip reverse DNS lookup
             except ValueError:
                 domain = entry
+                
                 try:
                     ip = socket.gethostbyname(entry)
                     if not no_rdns:
@@ -99,19 +105,19 @@ def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None, no_rd
                     else:
                         rev_dns = "N/A"  # Skip reverse DNS lookup
                 except socket.gaierror:
+                    ip_cat = outsrc_check(domain)
                     colored_print(f'[!] Cannot resolve domain: {entry}. Skipping.', 'red', 'bold')
+                    print(f'But the domain is categorized as {ip_cat}')
                     continue
 
-            original_entry = entry  # Save the original input (IP or domain) for outsource IP check
-            ip_cat = outsrc_check(original_entry)
-            
-            # If no match on the original entry and we have both IP and domain, try the other one
-            if ip_cat == "N/A" and domain and domain != "N/A":
-                ip_cat = outsrc_check(domain)
-            
-            # If still no match, try with the resolved IP (if the original entry was a domain)
-            if ip_cat == "N/A" and original_entry != ip:
+            if 'ip_cat' not in locals() or ip_cat == "N/A":
                 ip_cat = outsrc_check(ip)
+            
+            # If no match on IP and we have a domain (either original or from rDNS), check the domain as well
+            if ip_cat == "N/A" and domain and domain != "N/A":
+                domain_cat = outsrc_check(domain)
+                if domain_cat != "N/A":
+                    ip_cat = domain_cat
 
             ip_info = get_ip_info(ip, no_rdns)
             
@@ -119,7 +125,6 @@ def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None, no_rd
                 colored_print(f'[!] Could not retrieve information for IP: {ip}. Skipping.', 'red')
                 continue
             
-            # Insert the C2 category as the second element in the list
             ip_info.insert(1, ip_cat)
                 
             if virtot:
