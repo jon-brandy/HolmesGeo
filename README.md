@@ -53,8 +53,8 @@
 ```
 
 ```bash
-git clone https://github.com/jon-brandy/simple_ipcheck.git
-cd simple_ipcheck
+git clone https://github.com/jon-brandy/HolmesGeo.git
+cd HolmesGeo
 chmod +x install.sh
 ./install.sh
 ```
