@@ -37,6 +37,7 @@ def display_guides():
 | Additional Options:                                                          |
 |  - Use --no-rdns to disable reverse DNS lookups (speeds up processing).      |
 |  - Use --virtot to perform additional certificate and registrar lookup.      |
+|  - Use --no-output to skip file generation (console output only).            |
 |                                                                              |
 | Usage Example:                                                               |
 | python3 -m holmesMod.main --apache apache.log                                |
@@ -45,19 +46,23 @@ def display_guides():
 | python3 -m holmesMod.main --check list_ip.txt                                |
 | python3 -m holmesMod.main --check list_ip.txt --virtot                       |
 | python3 -m holmesMod.main --check list_ip.txt --no-rdns                      |
+| python3 -m holmesMod.main --check list_ip.txt --no-output                    |
 | python3 -m holmesMod.main --apache apache.log --virtot                       |
 | python3 -m holmesMod.main --csv file.csv --virtot                            |
 | python3 -m holmesMod.main --csv file.csv --column source_ip --virtot         |
 | cat ip.txt | python3 -m holmesMod.main --virtot                              |
 | cat ip.txt | python3 -m holmesMod.main --no-rdns                             |
+| cat ip.txt | python3 -m holmesMod.main --no-output                           |
 |                                                                              |
 | ./chk.sh --check samples/iplist.txt                                          |
 | ./chk.sh --check samples/iplist.txt --no-rdns                                |
+| ./chk.sh --check samples/iplist.txt --no-output                              |
 | ./chk.sh --csv samples/sample.csv --column ip_address                        |
 | ./chk.sh --apache samples/sample_log.txt                                     |
 | cat samples/iplist.txt | ./chk.sh --virtot                                   |
+| cat samples/iplist.txt | ./chk.sh --no-output                                |
 | echo "8.8.8.8" | ./chk.sh                                                    |
-| echo -e "8.8.8.8\\n37.252.185.229" | ./chk.sh                                 |
+| echo -e "8.8.8.8\\n37.252.185.229" | ./chk.sh --no-output                    |
 |                                                                              |
 ================================================================================
 """
@@ -81,6 +86,8 @@ def parse_arguments():
                         help="Perform additional certificate and registrar lookup")
     parser.add_argument("--no-rdns", action="store_true",
                         help="Disable reverse DNS lookups (speeds up processing)")
+    parser.add_argument("--no-output", action="store_true",
+                        help="Skip file generation and output results to console only")
     
     display_guides()
     args = parser.parse_args()
