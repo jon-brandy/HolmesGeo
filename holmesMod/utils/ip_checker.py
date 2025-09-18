@@ -86,6 +86,7 @@ def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None, no_rd
         for i, entry in enumerate(ip_list):
             entry = entry.strip()
             domain = None
+            ip_cat = "N/A"
             try:
                 ipaddress.ip_address(entry)
                 ip = entry 
@@ -110,8 +111,7 @@ def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None, no_rd
                     print(f'But the domain is categorized as {ip_cat}')
                     continue
 
-            if 'ip_cat' not in locals() or ip_cat == "N/A":
-                ip_cat = outsrc_check(ip)
+            ip_cat = outsrc_check(ip)
             
             # If no match on IP and we have a domain (either original or from rDNS), check the domain as well
             if ip_cat == "N/A" and domain and domain != "N/A":
