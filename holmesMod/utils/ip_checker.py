@@ -48,7 +48,94 @@ def outsrc_check(ip_domain):
         colored_print(f"[!] Error in outsrc_check: {str(e)}", "red")
         return "N/A"
 
-def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None, no_rdns=False):
+def process_ips_only(ip_list, virtot=False, user_agents=None, no_rdns=False):
+    for i, entry in enumerate(ip_list):
+        entry = entry.strip()
+        domain = None
+        ip_cat = "N/A" 
+        
+        try:
+            ipaddress.ip_address(entry)
+            ip = entry 
+            if not no_rdns:
+                rev_dns = rdns(ip)
+                if rev_dns != "N/A":
+                    domain = rev_dns
+            else:
+                rev_dns = "N/A"  # Skip reverse DNS lookup
+        except ValueError:
+            domain = entry
+            
+            try:
+                ip = socket.gethostbyname(entry)
+                if not no_rdns:
+                    rev_dns = rdns(ip)
+                else:
+                    rev_dns = "N/A"  # Skip reverse DNS lookup
+            except socket.gaierror:
+                ip_cat = outsrc_check(domain)
+                colored_print(f'[!] Cannot resolve domain: {entry}. Skipping.', 'red', 'bold')
+                print(f'But the domain is categorized as {ip_cat}')
+                continue
+     
+        # Always check the IP category for each IP
+        ip_cat = outsrc_check(ip)
+        
+        # If no match on IP and we have a domain (either original or from rDNS), check the domain as well
+        if ip_cat == "N/A" and domain and domain != "N/A":
+            domain_cat = outsrc_check(domain)
+            if domain_cat != "N/A":
+                ip_cat = domain_cat
+
+        ip_info = get_ip_info(ip, no_rdns)
+        
+        if not ip_info:
+            colored_print(f'[!] Could not retrieve information for IP: {ip}. Skipping.', 'red')
+            continue
+        
+        ip_info.insert(1, ip_cat)
+            
+        if virtot:
+            cert_cn, registrar = get_ssl_registrar(domain if domain else ip)
+            ip_info.extend([cert_cn, registrar])
+        
+        if user_agents is not None and i < len(user_agents):
+            ip_info.append(user_agents[i])
+        elif user_agents is not None:
+            ip_info.append("N/A")
+            
+        print(",".join(str(item) for item in ip_info))
+
+    colored_print('\n\n[STAGE-1] Processing completed (no files saved)', 'light_yellow', 'bold')
+
+
+def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None, no_rdns=False, no_output=False):
+    # Skip file operations if no_output is True
+    if no_output:
+        # Just print the header and process IPs without writing to file
+        header = [
+            'IP Address', 'IP Category', 'City', 'City Latitude', 'City Longitude', 'Country', 'Country Code', 
+            'Continent', 'ASN Number', 'ASN Organization', 'Network'
+        ]
+
+        if not no_rdns:
+            header.append('Reverse DNS')
+
+        if virtot:
+            header.extend([
+                'Certificate CN', 'Domain Registrar URL'
+            ])
+            
+        if user_agents is not None:
+            header.append('User Agent')
+            
+        print(",".join(header))
+        
+        # Process IPs without file writing
+        process_ips_only(ip_list, virtot, user_agents, no_rdns)
+        return
+    
+    # Original file-based processing continues below
     results_dir = os.path.dirname(output_file_path)
     os.makedirs(results_dir, exist_ok=True)
     
@@ -86,7 +173,8 @@ def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None, no_rd
         for i, entry in enumerate(ip_list):
             entry = entry.strip()
             domain = None
-            ip_cat = "N/A"
+            ip_cat = "N/A"  # Reset ip_cat for each iteration
+            
             try:
                 ipaddress.ip_address(entry)
                 ip = entry 
@@ -110,7 +198,8 @@ def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None, no_rd
                     colored_print(f'[!] Cannot resolve domain: {entry}. Skipping.', 'red', 'bold')
                     print(f'But the domain is categorized as {ip_cat}')
                     continue
-
+         
+            # Always check the IP category for each IP
             ip_cat = outsrc_check(ip)
             
             # If no match on IP and we have a domain (either original or from rDNS), check the domain as well
