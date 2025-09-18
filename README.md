@@ -55,6 +55,7 @@
 ```bash
 git clone https://github.com/jon-brandy/HolmesGeo.git
 cd HolmesGeo
+nano install.sh # paste your maxmind creds and VT API key.
 chmod +x install.sh
 ./install.sh
 ```
@@ -142,6 +143,13 @@ echo "8.8.8.8" | ./chk.sh --virtot
 python3 -m holmesMod.main --check list_ip.txt --no-rdns
 cat ip.txt | python3 -m holmesMod.main --no-rdns
 ./chk.sh --check samples/iplist.txt --no-rdns
+```
+
+> ### To Disable Output Conversion to CSV & XLSX files.
+
+```bash
+python3 -m holmesMod.main --check list_ip.txt --no-output
+./chk.sh --check samples/iplist.txt --no-output
 ```
 
 ## [❓] Output
