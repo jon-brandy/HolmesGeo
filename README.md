@@ -2,6 +2,8 @@
 
 ![holmes-geo-banner](https://github.com/user-attachments/assets/733f293a-a2f1-42be-8c9e-8e8b13a26bd8)
 
+---
+
 ![License](https://img.shields.io/github/license/jon-brandy/HolmesGeo)
 ![IP Geolocation Check](https://img.shields.io/badge/IP_Geolocation_Checker-129990)
 ![CSV-EXCEL](https://img.shields.io/badge/Tabular_File_Formats-Output-2e5339)
