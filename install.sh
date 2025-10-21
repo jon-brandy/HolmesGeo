@@ -166,8 +166,8 @@ main() {
     if [ ! -f "$GEOIP_CONFIG_PATH" ]; then
         echo "GeoIP configuration file not found. Creating a new one at $GEOIP_CONFIG_PATH..."
         sudo bash -c "cat > $GEOIP_CONFIG_PATH" <<EOF
-UserId <<PASTE_ACCOUNT_ID_HERE>>
-LicenseKey <<PASTE_LICENSE_KEY_HERE>>
+UserId <<PASTE_YOUR_ACCOUNT_ID_HERE>>
+LicenseKey <<PASTE_YOUR_LICENSE_KEY_HERE>>
 EditionIDs GeoLite2-Country GeoLite2-City GeoLite2-ASN
 DatabaseDirectory /usr/local/share/GeoIP
 EOF
@@ -225,16 +225,6 @@ EOF
     sudo chown -R $USER:$USER holmesMod/db/
     chmod 644 holmesMod/db/*.mmdb 2>/dev/null || true
     
-    echo -e "\n${BOLD}Configuring VirusTotal API Key...${NC}"
-    if [ -f "venv/bin/activate" ]; then
-        VT_API_KEY="<<PASTE_VT_API_KEY_HERE>>"
-        grep -q "export VT_API_KEY" venv/bin/activate || echo "export VT_API_KEY='$VT_API_KEY'" >> venv/bin/activate
-        echo -e "${GREEN}VirusTotal API Key configured successfully!${NC}"
-        source venv/bin/activate
-    else
-        echo -e "${YELLOW}[!] Skipping VirusTotal API Key configuration, activation script not found.${NC}"
-    fi
-    
     THREAT_DB_PATH="holmesMod/db/outsource_db/threat_intell.zip"
     EXTRACT_PATH="holmesMod/db/outsource_db"
     
@@ -248,7 +238,9 @@ EOF
         echo -e "${YELLOW}[!] Threat database not found at $THREAT_DB_PATH${NC}"
     fi
     
-    echo -e "\n${BOLD}Creating run script...${NC}"
+    echo -e "\n${BOLD}Creating run scripts...${NC}"
+    
+    # CLI script
     cat > chk.sh <<'EOF'
 #!/bin/bash
 source venv/bin/activate
@@ -256,9 +248,18 @@ python -m holmesMod.main "$@"
 EOF
     chmod +x chk.sh
     
+    # Streamlit GUI script
+    cat > run_gui.sh <<'EOF'
+#!/bin/bash
+source venv/bin/activate
+streamlit run streamlit_app.py
+EOF
+    chmod +x run_gui.sh
+    
     echo -e "\n${CYAN}[+] Installation & Configuration Finished [+]${NC}"
     echo -e "To view usage guide, run: ${GREEN}./chk.sh --help${NC}"
     echo -e "To test installation, run: ${GREEN}./chk.sh --version${NC}"
+    echo -e "To launch web GUI, run: ${GREEN}./run_gui.sh${NC}"
 }
 
 main
