@@ -38,23 +38,6 @@
 29 ...
 ```
 
-```html
-# Paste your Virus Total API Key at install.sh script
-66 ...
-67 ...
-68 echo -e "\n${BOLD}Configuring VirusTotal API Key...${NC}"
-69 if [ -f "venv/bin/activate" ]; then
-70     VT_API_KEY="<<PASTE_VT_API_KEY_HERE>>"
-71     grep -q "export VT_API_KEY" venv/bin/activate || echo "export VT_API_KEY='$VT_API_KEY'" >> venv/bin/activate
-72     echo "VirusTotal API Key configured successfully!"
-73     source venv/bin/activate
-74 else
-75     echo "[!] Skipping VirusTotal API Key configuration, no key found."
-76 fi
-77 ...
-78 ...
-```
-
 ```bash
 git clone https://github.com/jon-brandy/HolmesGeo.git
 cd HolmesGeo
