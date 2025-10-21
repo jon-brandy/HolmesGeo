@@ -6,6 +6,7 @@ import ipaddress
 import geoip2.database
 import pandas as pd
 import glob
+import sys
 from openpyxl import load_workbook
 from openpyxl.styles import Alignment, Border, Side
 from termcolor import colored
@@ -49,6 +50,9 @@ def outsrc_check(ip_domain):
         return "N/A"
 
 def process_ips_only(ip_list, virtot=False, user_agents=None, no_rdns=False):
+    # Create CSV writer for stdout
+    stdout_writer = csv.writer(sys.stdout, lineterminator='\n')
+    
     for i, entry in enumerate(ip_list):
         entry = entry.strip()
         domain = None
@@ -103,10 +107,11 @@ def process_ips_only(ip_list, virtot=False, user_agents=None, no_rdns=False):
             ip_info.append(user_agents[i])
         elif user_agents is not None:
             ip_info.append("N/A")
-            
-        print(",".join(str(item) for item in ip_info))
+        
+        # Write row using CSV writer for proper escaping
+        stdout_writer.writerow(ip_info)
 
-    colored_print('\n\n[STAGE-1] Processing completed (no files saved)', 'light_yellow', 'bold')
+    colored_print('\n\n[STAGE-1] Processing completed (no files saved)', 'yellow', 'bold')
 
 
 def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None, no_rdns=False, no_output=False):
@@ -128,8 +133,10 @@ def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None, no_rd
             
         if user_agents is not None:
             header.append('User Agent')
-            
-        print(",".join(header))
+        
+        # Use CSV writer for header
+        stdout_writer = csv.writer(sys.stdout, lineterminator='\n')
+        stdout_writer.writerow(header)
         
         # Process IPs without file writing
         process_ips_only(ip_list, virtot, user_agents, no_rdns)
@@ -167,8 +174,10 @@ def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None, no_rd
             header.append('User Agent')
             
         writer.writerow(header)
-    
-        print(",".join(header))
+        
+        # Also print header to stdout using CSV writer
+        stdout_writer = csv.writer(sys.stdout, lineterminator='\n')
+        stdout_writer.writerow(header)
 
         for i, entry in enumerate(ip_list):
             entry = entry.strip()
@@ -226,9 +235,10 @@ def ipcheck_mod(ip_list, output_file_path, virtot=False, user_agents=None, no_rd
                 ip_info.append("N/A")
                 
             writer.writerow(ip_info)
-            print(",".join(str(item) for item in ip_info))
+            # Print to stdout using CSV writer for proper escaping
+            stdout_writer.writerow(ip_info)
 
-    colored_print('\n\n\n[STAGE-1]', 'light_yellow', 'bold')
+    colored_print('\n\n\n[STAGE-1]', 'yellow', 'bold')
     print(f'Result saved to: {outfp}')
 
     # Convert CSV to XLSX
@@ -383,6 +393,15 @@ def get_ip_info(ip, no_rdns=False):
         colored_print(f'[!] Error: Database file {countmmdb} not found', 'red', 'bold')
 
     if city_info and country_info and asn_info:
+        # Construct network CIDR from ASN info
+        network = 'N/A'
+        if asn_info:
+            try:
+                # ASN info has ip_address and prefix_len attributes
+                network = f"{asn_info.ip_address}/{asn_info.prefix_len}"
+            except AttributeError:
+                network = 'N/A'
+        
         result = [
             ip, 
             # Note: C2 category is added in ipcheck_mod function, not here
@@ -394,7 +413,7 @@ def get_ip_info(ip, no_rdns=False):
             city_info.continent.names.get('en', 'N/A'),
             asn_info.autonomous_system_number if asn_info else 'N/A',
             asn_info.autonomous_system_organization if asn_info else 'N/A',
-            asn_info.network if asn_info else 'N/A'
+            network
         ]
         
         if not no_rdns:
@@ -431,8 +450,8 @@ def create_excel_report(csv_file):
         ws.column_dimensions[chr(65 + ua_col_idx)].width = 60  # Make User Agent column wider
         
     # Make the C2 Category column stand out with a good width
-    if 'Cat' in df.columns:
-        cat_col_idx = list(df.columns).index('Cat') + 1  # +1 because Excel is 1-indexed
+    if 'IP Category' in df.columns:
+        cat_col_idx = list(df.columns).index('IP Category') + 1  # +1 because Excel is 1-indexed
         ws.column_dimensions[chr(65 + cat_col_idx)].width = 20
 
     wb.save(excel_file)
@@ -440,4 +459,16 @@ def create_excel_report(csv_file):
     print(f'Result saved to: {excel_file}')
 
 def colored_print(message, color, style=None):
-    print(colored(message, color, attrs=[style] if style else []))
+    # Map non-standard colors to standard termcolor colors
+    color_map = {
+        'light_yellow': 'yellow',
+        'light_red': 'red',
+        'light_green': 'green',
+        'light_blue': 'blue',
+        'light_magenta': 'magenta',
+        'light_cyan': 'cyan'
+    }
+    
+    # Use mapped color if it exists, otherwise use the original
+    mapped_color = color_map.get(color, color)
+    print(colored(message, mapped_color, attrs=[style] if style else []))
