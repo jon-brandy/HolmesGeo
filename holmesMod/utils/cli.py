@@ -19,7 +19,7 @@ def display_banner():
     ascii_art = ascii_art.replace('ASIA', colored('ASIA', 'red', attrs=['bold']))
     print(colored(ascii_art, 'cyan', attrs=['bold']))
 
-    description = "[#] HolmesGeo - A Simple Tool for IP Geolocation Check [#]"
+    description = "[#] HolmesGeo - A Simple Tool for IP Geolocation Check v4.0 [#]"
     description = description.replace('HolmesGeo', colored('HolmesGeo', 'red', attrs=['bold']))
     description = description.replace('A Simple Tool for IP Geolocation Check', colored('A Simple Tool for IP Geolocation Check', 'green', attrs=['bold']))
 
