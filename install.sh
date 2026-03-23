@@ -1,5 +1,5 @@
 #!/bin/bash
-# baycysec.org
+
 RED='\033[1;31m'
 GREEN='\033[0;32m'
 CYAN='\033[1;36m'
@@ -166,7 +166,7 @@ main() {
     if [ ! -f "$GEOIP_CONFIG_PATH" ]; then
         echo "GeoIP configuration file not found. Creating a new one at $GEOIP_CONFIG_PATH..."
         sudo bash -c "cat > $GEOIP_CONFIG_PATH" <<EOF
-UserId <<PASTE_YOUR_ACCOUNT_ID_HERE>>
+UserId <<PASTE_YOUR_LICENSE_KEY_HERE>>
 LicenseKey <<PASTE_YOUR_LICENSE_KEY_HERE>>
 EditionIDs GeoLite2-Country GeoLite2-City GeoLite2-ASN
 DatabaseDirectory /usr/local/share/GeoIP
@@ -258,7 +258,6 @@ EOF
     
     echo -e "\n${CYAN}[+] Installation & Configuration Finished [+]${NC}"
     echo -e "To view usage guide, run: ${GREEN}./chk.sh --help${NC}"
-    echo -e "To test installation, run: ${GREEN}./chk.sh --version${NC}"
     echo -e "To launch web GUI, run: ${GREEN}./run_gui.sh${NC}"
 }
 
